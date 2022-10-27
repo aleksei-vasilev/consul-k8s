@@ -349,11 +349,11 @@ global:
     # Set this to false to incrementally roll out TLS on an existing Consul cluster.
     # Please see https://consul.io/docs/k8s/operations/tls-on-existing-cluster
     # for more details.
-    verify: true
+    verify: false
 
     # If true, the Helm chart will configure Consul to disable the HTTP port on
     # both clients and servers and to only accept HTTPS connections.
-    httpsOnly: true
+    httpsOnly: false
 
     # A secret containing the certificate of the CA to use for TLS communication within the Consul cluster.
     # If you have generated the CA yourself with the consul CLI, you could use the following command to create the secret
@@ -662,7 +662,7 @@ server:
   # within Kubernetes to join that cluster, this should probably be false.
   # @default: global.enabled
   # @type: boolean
-  enabled: "-"
+  enabled: false
 
   # The name of the Docker image (including any tag) for the containers running
   # Consul server agents.
@@ -1136,7 +1136,7 @@ server:
 externalServers:
   # If true, the Helm chart will be configured to talk to the external servers.
   # If setting this to true, you must also set `server.enabled` to false.
-  enabled: false
+  enabled: true
 
   # An array of external Consul server hosts that are used to make
   # HTTPS connections from the components in this Helm chart.
@@ -1147,7 +1147,7 @@ externalServers:
   # should be the same, however, they may be different if you
   # wish to use separate hosts for the HTTPS connections.
   # @type: array<string>
-  hosts: []
+  hosts: ["172.20.3.142"]
 
   # The HTTPS port of the Consul servers.
   httpsPort: 8501
@@ -1189,12 +1189,12 @@ client:
   # the resources necessary for a Consul client on every Kubernetes node. This _does not_ require
   # `server.enabled`, since the agents can be configured to join an external cluster.
   # @type: boolean
-  enabled: false
+  enabled: true
 
   # The name of the Docker image (including any tag) for the containers
   # running Consul client agents.
   # @type: string
-  image: null
+  image: hashicorp/consul:1.14.0-beta1
 
   # A list of valid `-retry-join` values (https://www.consul.io/docs/agent/config/cli-flags#_retry_join).
   # If this is `null` (default), then the clients will attempt to automatically
@@ -1203,7 +1203,7 @@ client:
   # join that cluster. If `server.enabled` is not true, then a value must be
   # specified so the clients can join a valid cluster.
   # @type: array<string>
-  join: null
+  join: 172.20.3.142
 
   # An absolute path to a directory on the host machine to use as the Consul
   # client data directory. If set to the empty string or null, the Consul agent
@@ -1648,12 +1648,12 @@ ui:
 syncCatalog:
   # True if you want to enable the catalog sync. Set to "-" to inherit from
   # global.enabled.
-  enabled: false
+  enabled: true
 
   # The name of the Docker image (including any tag) for consul-k8s-control-plane
   # to run the sync program.
   # @type: string
-  image: null
+  image: hashicorp/consul:1.14.0-beta1
 
   # If true, all valid services in K8S are
   # synced by default. If false, the service must be annotated
@@ -1670,7 +1670,7 @@ syncCatalog:
 
   # If true, will sync Consul services to Kubernetes. This can be disabled to
   # have a one-way sync.
-  toK8S: true
+  toK8S: false
 
   # Service prefix to prepend to services before registering
   # with Kubernetes. For example "consul-" will register all services
